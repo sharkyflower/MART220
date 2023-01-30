@@ -15,12 +15,17 @@ var riceRandomY = [];
 var riceFlippedRandomX = [];
 var riceFlippedRandomY = [];
 
+var fishList = ["Salmon", "Tuna"];
+var fishPicked;
+
 function setup(){
     createCanvas(500,600);
 
     //rice randomizer
     riceRandomizer(riceRandomizerAmount);
 
+    //fish randomizer
+    fishPicked = fishList[Math.floor(Math.random()*fishList.length)];
 }
 
 function draw()
@@ -30,8 +35,23 @@ function draw()
     //name maker
     nameMaker();
 
+    //fish maker
+    if(fishPicked == "Salmon"){
+        salmonMaker();
+        fill(0,0,0);
+        text("Click to switch to Tuna", 185,205);
+    }
+    else if(fishPicked == "Tuna"){
+        tunaMaker();
+        fill(0,0,0);
+        text("Click to switch to Salmon", 180,205);
+    }
+
     //Salmon maker
-    salmonMaker();
+    //salmonMaker();
+
+    //Tuna maker
+    //tunaMaker();
 
     //plate
     plateMaker();
@@ -78,6 +98,7 @@ function riceRandomizer(i){
     }
 }
 
+
 function salmonMaker(){
     //salmon maker
     fill("#FA8072");
@@ -98,6 +119,42 @@ function salmonMaker(){
 
     stroke("#ff91a4");
     strokeWeight(2);
+    line(218,364,210,374);
+    line(210,374,218,381);
+
+    line(234,362,224,372);
+    line(224,372,234,379);
+
+    line(250,361.5,240,371);
+    line(240,371,250,378.5);
+
+    line(266,362,256,371);
+    line(256,371,266,379);
+
+    line(284,364,274,372);
+    line(274,372,284,381);
+}
+
+function tunaMaker(){
+    //salmon maker
+    fill("#cf6275");
+    stroke("rgba(0,0,0,0)");
+    rect(200,370,100,20);
+    fill("#FFFFFF");
+    stroke("#000000");
+    arc(250,390,100,20,PI,2*PI,OPEN);
+    fill("#cf6275");
+    stroke("#000000");
+    arc(250,370,100,20,PI,2*PI,OPEN);
+    line(200,370,200,390);
+    line(300,370,300,390);
+
+    //tuna line
+
+    //x - > 16
+
+    stroke("#df7285");
+    strokeWeight(1);
     line(218,364,210,374);
     line(210,374,218,381);
 
@@ -159,5 +216,14 @@ function keyPressed(){
         else if(riceFlipped == 1){
             riceFlipped = 2;
         }
+    }
+}
+
+function mouseClicked(){
+    if(fishPicked == "Salmon"){
+        fishPicked = fishList[1];
+    }
+    else if(fishPicked == "Tuna"){
+        fishPicked = fishList[0];
     }
 }
