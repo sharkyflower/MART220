@@ -21,8 +21,13 @@ var fishSwitchCooldown = false;
 var fishTimer = 0;
 
 function preload(){
-    //salmonReal = loadImage("../images/salmon_sushi_transparent.png");
-    salmonMS = loadImage("../images/salmon_sushi_ms_paint.png");
+    salmonReal = loadImage("./images/salmon_sushi_transparent.png");
+    salmonMS = loadImage("./images/salmon_sushi_ms_paint.png");
+
+    tunaReal = loadImage("./images/tuna_sushi_transparent.png");
+    tunaMS = loadImage("./images/tuna_sushi_ms_paint.png");
+
+    fontForAll = loadFont("./fonts/Yomogi-Regular.ttf");
 }
 
 function setup(){
@@ -33,13 +38,18 @@ function setup(){
 
     //fish randomizer
     fishPicked = fishList[Math.floor(Math.random()*fishList.length)];
+
+    //font picker
+    textFont(fontForAll);
+    textSize(17);
 }
 
 function draw()
 {
     background(255,255,255);
 
-    image(salmonMS, 10, 10);
+    //bg image maker
+    fishImageMaker();
 
     //name maker
     nameMaker();
@@ -101,18 +111,36 @@ function riceRandomizer(i){
     }
 }
 
+function fishImageMaker(){
+    if(fishPicked == "Salmon"){
+        tint(255,127);
+        image(salmonMS, 20, -20, 500, 500);
+
+        tint(255,255);
+        image(salmonReal, mouseX, mouseY, 30, 30);
+        
+    }
+    else if(fishPicked == "Tuna"){
+        tint(255,127);
+        image(tunaMS, 70, 0, 400, 400);
+
+        tint(255,255);
+        image(tunaReal, mouseX, mouseY, 40, 30);
+    }
+}
+
 function fishMaker(){
     //fish maker
     
     if(fishPicked == "Salmon"){
         salmonMaker();
         fill(0,0,0);
-        text("Click to switch to Tuna", 185,205);
+        text("Click to switch to Tuna", 150,205);
     }
     else if(fishPicked == "Tuna"){
         tunaMaker();
         fill(0,0,0);
-        text("Click to switch to Salmon", 180,205);
+        text("Click to switch to Salmon", 140,205);
     }
 }
 
@@ -191,20 +219,20 @@ function tunaMaker(){
 function nameMaker(){
     //name maker
     fill("#DC143C");
-    text("Lucy H", 450, 500);
+    text("Lucy H", 425, 500);
 
     fill(0,0,0);
-    text("Sushi Maker", 25,25);
+    text("Sushi Maker", 10,25);
 }
 
 function riceFlipper(){
     if(riceFlipped == 0){
         fill(0,0,0);
-        text("Cause Chaos: Press F", 185, 250);
+        text("Cause Chaos: Press F", 165, 250);
     }
     if(riceFlipped == 1){
         fill(0,0,0);
-        text("Reset: Press F", 210, 250);
+        text("Reset: Press F", 187, 250);
         if(! (riceFlippedRandomX.length == riceRandomX.length)){
             for(i=0; i<riceRandomX.length; i++){
                 riceFlippedRandomX[i] = ((Math.random() * 2 - 1));
@@ -254,11 +282,11 @@ function fishCoolDown(){
     if(frameCount % 60 == 0 && fishTimer > 0 && fishSwitchCooldown == true){
         fishTimer --;
     }
-    if(fishSwitchCooldown){
-        text(`Fish on cooldown for ${fishTimer} seconds...`, 157, 175);
-    }
     if(fishTimer <= 0){
         fishSwitchCooldown = false;
+    }
+    if(fishSwitchCooldown){
+        text(`Fish on cooldown for ${fishTimer} seconds...`, 110, 175);
     }
 }
 
