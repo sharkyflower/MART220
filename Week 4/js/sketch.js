@@ -20,6 +20,13 @@ var fishPicked;
 var fishSwitchCooldown = false;
 var fishTimer = 0;
 
+var animationTxt = [];
+var catChar;
+var currAnimationSelect;
+
+var randomSushiList = [];
+var randSushi;
+
 function preload(){
     salmonReal = loadImage("./images/salmon_sushi_transparent.png");
     salmonMS = loadImage("./images/salmon_sushi_ms_paint.png");
@@ -28,10 +35,18 @@ function preload(){
     tunaMS = loadImage("./images/tuna_sushi_ms_paint.png");
 
     fontForAll = loadFont("./fonts/Yomogi-Regular.ttf");
+
+    idleAnimation = loadStrings("./images/cat/animation/idle.txt");
+    walkAnimation = loadStrings("./images/cat/animation/walk.txt");
 }
 
 function setup(){
     createCanvas(500,600);
+
+    //animation stuff
+    animationTxt.push(idleAnimation, walkAnimation);
+    catChar = new characterCreator(animationTxt);
+    currAnimationSelect = "idle";
 
     //rice randomizer
     riceRandomizer(riceRandomizerAmount);
@@ -79,6 +94,36 @@ function draw()
 
     //fish cooldown
     fishCoolDown();
+
+    //animation movement
+    if(keyIsPressed){
+        if(currAnimationSelect == "idle"){
+            currAnimationSelect = "walk";
+        }
+        if(key == 'a'){
+            catChar.movement("a")
+        }
+        if(key == 'd'){
+            catChar.movement("d")
+        }
+        if(key == 'w'){
+            catChar.movement("w")
+        }
+        if(key == 's'){
+            catChar.movement("s")
+        }
+    }
+
+    if(!keyIsPressed){
+        if(currAnimationSelect == "walk"){
+            currAnimationSelect = "idle";
+        }
+    }
+
+    catChar.animationSelect(currAnimationSelect);
+
+    //animation
+    catChar.draw();
 
 }
 
@@ -262,6 +307,11 @@ function keyPressed(){
             riceFlipped = 2;
         }
     }
+    
+    if(keyCode == 32){
+        
+    }
+
 }
 
 function mouseClicked(){
@@ -294,3 +344,4 @@ function fishAddTimer(timeInput){
     fishSwitchCooldown = true;
     fishTimer = timeInput;
 }
+
