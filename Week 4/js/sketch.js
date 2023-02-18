@@ -27,6 +27,8 @@ var currAnimationSelect;
 var randomSushiList = [];
 var randSushi;
 
+var foodCollector = [];
+
 function preload(){
     salmonReal = loadImage("./images/salmon_sushi_transparent.png");
     salmonMS = loadImage("./images/salmon_sushi_ms_paint.png");
@@ -84,6 +86,14 @@ function draw()
     //Sushi's rice
     riceMaker();
 
+    //food collector load
+    for(var i = 0 ; i < foodCollector.length; i++){
+        foodCollector[i].makeFood(catChar.isCharFlipped());
+    }
+    
+    fill(125,0,125);
+    text("Press Spacebar to summon superpositional rice", 55, 100);
+
     //check location of mouse (x,y)
     //fill(0,0,0);
     //text("X: " + mouseX,50,500 );
@@ -101,16 +111,16 @@ function draw()
             currAnimationSelect = "walk";
         }
         if(key == 'a'){
-            catChar.movement("a")
+            catChar.movement("a");
         }
         if(key == 'd'){
-            catChar.movement("d")
+            catChar.movement("d");
         }
         if(key == 'w'){
-            catChar.movement("w")
+            catChar.movement("w");
         }
         if(key == 's'){
-            catChar.movement("s")
+            catChar.movement("s");
         }
     }
 
@@ -309,7 +319,12 @@ function keyPressed(){
     }
     
     if(keyCode == 32){
+        newFood = new foodCreator();
+        foodCollector.push(newFood);
         
+        if(foodCollector.length > 3){
+            foodCollector.shift();
+        }
     }
 
 }

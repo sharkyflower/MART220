@@ -9,6 +9,9 @@ class characterCreator {
         this.animationIteration = 0;
         this.xPos = 50; 
         this.yPos = 200;
+        this.w = 75;
+        this.h = 100;
+        this.direction = "forward";
 
         console.log(animationList);
         
@@ -40,7 +43,15 @@ class characterCreator {
         // console.log(this.character.length);
         this.animationLength = this.currAnimation.length
 
-        image(this.currAnimation[this.animationIteration], this.xPos, this.yPos, 75, 100); // display image
+        if(this.direction == "reverse"){
+            translate(this.w,0);
+            scale(-1.0,1.0);
+            image(this.currAnimation[this.animationIteration], -this.xPos, this.yPos, this.w, this.h); // display image
+        }
+        else if(this.direction == "forward"){
+            image(this.currAnimation[this.animationIteration], this.xPos, this.yPos, this.w, this.h); // display image
+        }
+        
         
         if(frameCount % 3 == 0){
             this.animationIteration++;
@@ -52,7 +63,6 @@ class characterCreator {
     }
 
     animationSelect(keyword){
-        console.log(keyword);
         if(keyword == "idle"){
             this.currAnimation = this.spriteSheets.get("idle");
         }
@@ -64,9 +74,11 @@ class characterCreator {
     movement(keyIn){
         if(keyIn == "a"){
             this.xPos-=5;
+            this.direction = "reverse";
         }
         if(keyIn == "d"){
             this.xPos+=5;
+            this.direction = "forward";
         }
         if(keyIn == "w"){
             this.yPos-=5;
@@ -75,4 +87,9 @@ class characterCreator {
             this.yPos+=5;
         }
     }
+    
+    isCharFlipped(){
+        return this.direction;
+    }
+
 }
