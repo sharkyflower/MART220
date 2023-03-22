@@ -24,6 +24,7 @@ function setup(){
 
     //scribble 
     scribble = new Scribble();
+    scribbe2 = new Scribble();
 
     //borderMaker 
     topBorderRect = new rectMaker(0,0,width,5);
@@ -68,6 +69,10 @@ function draw()
     scribble.scribbleRect( 100, 100, 100, 100 );
     scribble.scribbleRect( 200, 200, 200, 200 );
     pop();
+
+    push();
+    scribble2.scribbleRect( 300, 300, 300, 300);
+    scribble2.scribbleRect( 400, 400, 400, 400);
 
     //check location of mouse (x,y)
     fill(0,0,0);
