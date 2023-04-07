@@ -29,6 +29,10 @@ class rectMaker
     return this.h;
   }
 
+  getColliDetection(){
+    return this.ColliDetection;
+  }
+
   getName(){
     return this.name;
   }

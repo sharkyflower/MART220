@@ -34,6 +34,10 @@ class scribbleRectMaker
         return this.collisionBox.getName();
     }
 
+    getColliDetection(){
+        return this.colliDetection();
+    }
+
     getCollisionBox(){
         return this.collisionBox;
     }

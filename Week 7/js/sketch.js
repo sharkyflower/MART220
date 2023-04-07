@@ -4,7 +4,7 @@ var catChar;
 var currAnimationSelect;
 
 var rectBorders = [];
-var scribRects = [];
+var scribWalls = [];
 var scribble; 
 
 function preload(){
@@ -26,12 +26,14 @@ function setup(){
     //scribble 
     scribble = new Scribble();
 
-    //scribbleTest
-    scribRect = new scribbleRectMaker(100, 100, 100, 100,true, "scribRect");
-    scribRect2 = new scribbleRectMaker(300, 300, 100, 100, true, "scribRect2");
+    //scribbleWalls
+    scribWall = new scribbleRectMaker(150, 250, 100, 500, true, "scribWall");
+    scribWall2 = new scribbleRectMaker(350, 350, 100, 500, true, "scribWall2");
 
-    scribRects.push(scribRect, scribRect2);
+    scribWalls.push(scribWall, scribWall2);
 
+    //scribble collectibles 
+    scribStar = new scribbleStarMaker(450, 100, 20, 20, false, "scribStar");
     //borderMaker 
     topBorderRect = new rectMaker(0,0,width,5,true, "topBorderRect");
     botBorderRect = new rectMaker(0,height,width,-5,true, "botBorderRect");
@@ -72,27 +74,33 @@ function draw()
     }
     */
 
-    //test
+    //walls 
     push();
 
     //scribRect.draw();
     //scribRect.rectCollisionCheck(catChar);
-    //catChar.collideWithScribRect(scribRect);
-    for(var i = 0; i<scribRects.length; i++){
-        scribRects[i].draw();
-        scribRects[i].rectCollisionCheck(catChar);
-        text(scribRects[i].getName() + " is colliding? " + scribRects[i].getCollision(), 200, 200 + i*20)
+    //catChar.collideWithScribWall(scribRect);
+    for(var i = 0; i<scribWalls.length; i++){
+        scribWalls[i].draw();
+        scribWalls[i].rectCollisionCheck(catChar);
+        text(scribWalls[i].getName() + " is colliding? " + scribWalls[i].getCollision(), 200, 200 + i*20)
     }
     
-    catChar.collideWithScribRect(scribRects)
+    catChar.collideWithScribWall(scribWalls)
 
     pop();
 
-    //scribRect2.draw();
-    //scribRect2.rectCollisionCheck(catChar);
-    //catChar.collideWithScribRect(scribRect2);
+    //test
+    push();
+    
+    scribStar.draw();
+    scribStar.rectCollisionCheck(catChar);
 
+    pop();
 
+    text(scribStar.getName() + " is colliding? " + scribStar.getCollision(), 350, 350);
+
+    //update collision checks
     catChar.collisionRefresher();
 
     text("char collision check: " + catChar.getCollisionMap(), 100, 400);
@@ -102,6 +110,7 @@ function draw()
     text("directional collision check: " + catChar.getDirectionalCollision(), 50, 500);
 
     text("shape collided: " + catChar.getShapeCollided(), 200, 200);
+
     //check location of mouse (x,y)
     fill(0,0,0);
     text("X: " + mouseX,-350,-250 );

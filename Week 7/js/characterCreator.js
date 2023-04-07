@@ -292,7 +292,7 @@ class characterCreator {
         */
     }
 
-    collideWithScribRect(inShape){
+    collideWithScribWall(inShape){
         //this.collisionMap.set("scribbleRectCollision", isColliding);
         //this.restrictMvtActivationCheck();
         
