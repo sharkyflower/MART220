@@ -5,13 +5,30 @@ var currAnimationSelect;
 
 var rectBorders = [];
 var scribWalls = [];
+var starCollectable = [];
+var badStarCollectable = [];
 var scribble; 
+
+var bgMusicIntro;
+var bgMusicLoop;
+var bgPlayMode = "Intro";
+
+var starCollectSound;
+var badStarCollectSound;
 
 function preload(){
     fontForAll = loadFont("./fonts/Yomogi-Regular.ttf");
 
     idleAnimation = loadStrings("./images/cat/animation/idle.txt");
     walkAnimation = loadStrings("./images/cat/animation/walk.txt");
+
+    soundFormats("mp3");
+
+    bgMusicIntro = loadSound("./sounds/musicintro.mp3");
+    bgMusicLoop = loadSound("./sounds/musicloop.mp3");
+
+    starCollectSound = loadSound("./sounds/itemCollect.mp3");
+    badStarCollectSound = loadSound("./sounds/badItemCollect.mp3");
 }
 
 function setup(){
@@ -32,8 +49,21 @@ function setup(){
 
     scribWalls.push(scribWall, scribWall2);
 
-    //scribble collectibles 
+    //scribble collectables 
     scribStar = new scribbleStarMaker(450, 100, 20, 20, false, "scribStar");
+    scribStar2 = new scribbleStarMaker(500, 200, 20, 20, false, "scribStar2");
+    scribStar3 = new scribbleStarMaker(550, 300, 20, 20, false, "scribStar3");
+    scribStar4 = new scribbleStarMaker(600, 400, 20, 20, false, "scribStar4");
+    scribStar5 = new scribbleStarMaker(450, 450, 20, 20, false, "scribStar5");
+
+    starCollectable.push(scribStar, scribStar2, scribStar3, scribStar4, scribStar5)
+
+    //scribble bad collectables
+    badScribStar = new scribbleStarMaker(600, 100, 20, 20, false, "badScribStar");
+    badScribStar2 = new scribbleStarMaker(630, 250, 20, 20, false, "badScribStar2");
+
+    badStarCollectable.push(badScribStar, badScribStar2);
+
     //borderMaker 
     topBorderRect = new rectMaker(0,0,width,5,true, "topBorderRect");
     botBorderRect = new rectMaker(0,height,width,-5,true, "botBorderRect");
@@ -45,6 +75,7 @@ function setup(){
     //font picker
     textFont(fontForAll);
     textSize(17);
+
 }
 
 function draw()
@@ -90,15 +121,39 @@ function draw()
 
     pop();
 
-    //test
+    //star collectables 
     push();
     
-    scribStar.draw();
-    scribStar.rectCollisionCheck(catChar);
+    stroke(255,205,60);
+
+    for(var i = 0; i < starCollectable.length; i++){
+        starCollectable[i].draw();
+        starCollectable[i].rectCollisionCheck(catChar);
+    }
 
     pop();
 
-    text(scribStar.getName() + " is colliding? " + scribStar.getCollision(), 350, 350);
+    for(var i = 0; i < starCollectable.length; i++){
+        text(starCollectable[i].getName() + " is colliding? " + starCollectable[i].getCollision(), 350, 350 + i*20);
+    }
+
+    //bad star collectables
+    push();
+
+    stroke(219,26,26,125);
+
+    for(var i = 0; i < badStarCollectable.length; i++){
+        badStarCollectable[i].draw();
+        badStarCollectable[i].rectCollisionCheck(catChar);
+    }
+
+    pop();
+
+    for(var i = 0; i < badStarCollectable.length; i++){
+        text(badStarCollectable[i].getName() + " is colliding? " + badStarCollectable[i].getCollision(), 350, 500 + i*20);
+    }
+
+    //text(scribStar.getName() + " is colliding? " + scribStar.getCollision(), 350, 350);
 
     //update collision checks
     catChar.collisionRefresher();
@@ -111,12 +166,19 @@ function draw()
 
     text("shape collided: " + catChar.getShapeCollided(), 200, 200);
 
+
+    //score keeping
+    catChar.itemCollection(starCollectable, "+", starCollectSound);
+    catChar.itemCollection(badStarCollectable, "-", badStarCollectSound);
+
+    text("Stars collected: " + catChar.getItemCollected(), 200, 250);
+
     //check location of mouse (x,y)
-    fill(0,0,0);
-    text("X: " + mouseX,-350,-250 );
-    text("Y: " + mouseY,-350,-230 );
-    text("Width: " + width, -350, -210);
-    text("Height: " + height, -350, -190);
+    //fill(0,0,0);
+    //text("X: " + mouseX,-350,-250 );
+    //text("Y: " + mouseY,-350,-230 );
+    //text("Width: " + width, -350, -210);
+    //text("Height: " + height, -350, -190);
 
     //animation movement
     if(keyIsPressed){
@@ -160,6 +222,18 @@ function keyPressed(){
     if (key == 'd') {
         catChar.isMoving("d");
     }
+
+    //music intro plays
+    if(bgMusicIntro.isLoaded() && !bgMusicIntro.isPlaying() && bgPlayMode == "Intro"){
+        bgMusicIntro.play();
+        bgPlayMode = "Loop";
+    }
+    else if(!bgMusicIntro.isPlaying() && bgPlayMode == "Loop"){
+        bgMusicLoop.loop();
+        bgPlayMode = "inLoop";
+    }    
+
+    
 }
 
 
@@ -178,7 +252,4 @@ function keyReleased() {
     }
   }
 
-function mouseClicked(){
-    
-}
 

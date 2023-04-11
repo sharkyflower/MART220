@@ -7,6 +7,7 @@ class characterCreator {
         this.currAnimation = [];
         this.animationLength = 0;
         this.animationIteration = 0;
+
         this.xPos = xPos; 
         this.yPos = yPos;
         this.w = w;
@@ -17,6 +18,7 @@ class characterCreator {
         this.movingDown = false;
         this.movingLeft = false;
         this.movingRight = false;
+
         this.collisionMap = new Map([
             ["borderCollision", false],
             ["scribbleRectCollision", false]
@@ -35,6 +37,9 @@ class characterCreator {
         this.shapeCollided = new Map([])
         this.collisionBox = new rectMaker(this.xPos+3, this.yPos, this.w-10, this.h);
         this.predictionCollisionBox = new rectMaker(this.xPos+3, this.yPos, this.w-10, this.h+10);
+
+        this.itemCollected = 0;
+
         this.load();
         
     }
@@ -441,6 +446,30 @@ class characterCreator {
             returnStr = returnStr + eachShapes[0].getName() + ": " + eachShapes[1] + " "
         }
         return returnStr;
+    }
+
+    getItemCollected(){
+        return this.itemCollected;
+    }
+
+    itemCollection(inShapeArray, condition, sound){
+        var copyArray = Array.from(inShapeArray);
+        for (var i in copyArray){
+            if(copyArray[i].getCollision()){
+                if(condition == "+"){
+                    this.itemCollected += 1;
+                }
+                else if(condition == "-"){
+                    this.itemCollected -= 1;
+                }
+                sound.play();
+
+                const index = inShapeArray.indexOf(copyArray[i])
+                if (index > -1){
+                    inShapeArray.splice(index, 1);
+                }
+            }
+        }
     }
 
 }
