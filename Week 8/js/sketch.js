@@ -197,24 +197,6 @@ function draw()
     //text("Width: " + width, -350, -210);
     //text("Height: " + height, -350, -190);
 
-    //animation movement
-    if(keyIsPressed){
-        if(currAnimationSelect == "idle"){
-            currAnimationSelect = "walk";
-        }
-    }
-
-    if(!keyIsPressed){
-        if(currAnimationSelect == "walk"){
-            currAnimationSelect = "idle";
-        }
-    }
-
-    catChar.animationSelect(currAnimationSelect);
-
-    //animation
-    catChar.draw();
-
 }
 
 function nameMaker(){
