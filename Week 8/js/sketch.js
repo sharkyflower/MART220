@@ -1,20 +1,17 @@
-
-var animationTxt = [];
 var catChar;
-var currAnimationSelect;
 
-var rectBorders = [];
-var scribWalls = [];
-var starCollectable = [];
-var badStarCollectable = [];
-var scribble; 
+//var rectBorders = [];
+//var scribWalls = [];
+//var starCollectable = [];
+//var badStarCollectable = [];
+//var scribble; 
 
-var bgMusicIntro;
-var bgMusicLoop;
-var bgPlayMode = "Intro";
+//var bgMusicIntro;
+//var bgMusicLoop;
+//var bgPlayMode = "Intro";
 
-var starCollectSound;
-var badStarCollectSound;
+//var starCollectSound;
+//var badStarCollectSound;
 
 function preload(){
     fontForAll = loadFont("./fonts/Yomogi-Regular.ttf");
@@ -22,13 +19,13 @@ function preload(){
     idleAnimation = loadStrings("./images/cat/animation/idle.txt");
     walkAnimation = loadStrings("./images/cat/animation/walk.txt");
 
-    soundFormats("mp3");
+    //soundFormats("mp3");
 
-    bgMusicIntro = loadSound("./sounds/musicintro.mp3");
-    bgMusicLoop = loadSound("./sounds/musicloop.mp3");
+    //bgMusicIntro = loadSound("./sounds/musicintro.mp3");
+    //bgMusicLoop = loadSound("./sounds/musicloop.mp3");
 
-    starCollectSound = loadSound("./sounds/itemCollect.mp3");
-    badStarCollectSound = loadSound("./sounds/badItemCollect.mp3");
+    //starCollectSound = loadSound("./sounds/itemCollect.mp3");
+    //badStarCollectSound = loadSound("./sounds/badItemCollect.mp3");
 }
 
 function setup(){
@@ -36,18 +33,22 @@ function setup(){
     angleMode(DEGREES);
 
     //animation stuff
-    animationTxt.push(idleAnimation, walkAnimation);
-    catChar = new characterCreator(animationTxt, 10, 10, 50, 50);
-    currAnimationSelect = "idle";
+    catChar = new characterCreator(10, 10, 50, 50);
+    catChar.loadAnimation("idle", idleAnimation);
+    catChar.loadAnimation("walk", walkAnimation);
+    //currAnimationSelect = "idle";
 
+    /*
     //scribble 
     scribble = new Scribble();
 
     //scribbleWalls
-    scribWall = new scribbleRectMaker(150, 250, 100, 500, true, "scribWall");
-    scribWall2 = new scribbleRectMaker(350, 350, 100, 500, true, "scribWall2");
+    scribWall = new scribbleRectMaker(125, 300, 50, 425, true, "scribWall");
+    scribWall2 = new scribbleRectMaker(675, 300, 50, 425, true, "scribWall2");
+    scribWall3 = new scribbleRectMaker(400, 113, 500, 50, true, "scribWall3");
+    scribWall4 = new scribbleRectMaker(400, 489, 500, 50, true, "scribWall4");
 
-    scribWalls.push(scribWall, scribWall2);
+    scribWalls.push(scribWall, scribWall2, scribWall3, scribWall4);
 
     //scribble collectables 
     scribStar = new scribbleStarMaker(450, 100, 20, 20, false, "scribStar");
@@ -72,6 +73,8 @@ function setup(){
 
     rectBorders.push(topBorderRect, botBorderRect, leftBorderRect, rightBorderRect);
 
+    */
+
     //font picker
     textFont(fontForAll);
     textSize(17);
@@ -85,8 +88,19 @@ function draw()
     //name maker
     nameMaker();
 
+    //movement
+    if(kb.pressing("d")){
+        catChar.updatePosition("Forward");
+        catChar.drawAnimation("Walk");
+    }
+    else if(kb.pressing("a")){
+        catChar.updatePosition("Reverse");
+        catChar.drawAnimation("Walk");
+    }
+
     //background test
 
+    /*
     //edge borders
     for(var i = 0; i < rectBorders.length; i++){
         rectBorders[i].draw();
@@ -105,6 +119,7 @@ function draw()
     }
     */
 
+    /*
     //walls 
     push();
 
@@ -173,6 +188,8 @@ function draw()
 
     text("Stars collected: " + catChar.getItemCollected(), 200, 250);
 
+    */
+
     //check location of mouse (x,y)
     //fill(0,0,0);
     //text("X: " + mouseX,-350,-250 );
@@ -209,6 +226,8 @@ function nameMaker(){
     text("I can't think of a good name so this ends up being the name", 10, 25);
 }
 
+/*
+
 function keyPressed(){
     if (key == 'w') {
         catChar.isMoving("w");
@@ -223,6 +242,7 @@ function keyPressed(){
         catChar.isMoving("d");
     }
 
+    /*
     //music intro plays
     if(bgMusicIntro.isLoaded() && !bgMusicIntro.isPlaying() && bgPlayMode == "Intro"){
         bgMusicIntro.play();
@@ -232,8 +252,8 @@ function keyPressed(){
         bgMusicLoop.loop();
         bgPlayMode = "inLoop";
     }    
-
-    
+    */
+    /*
 }
 
 
@@ -250,6 +270,7 @@ function keyReleased() {
     if (key == 'd') {
         catChar.isNotMoving("d");
     }
+    
   }
-
+*/
 
