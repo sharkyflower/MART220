@@ -1,18 +1,19 @@
 var catChar;
-var charColli;
+
 var playerCondition;
-var health = 3;
-var score = 0;
+var obsRemain = 10;
+var collectable = 0;
+
 var addPt = [];
-var subPt = [];
+//var subPt = [];
 var obstacles = []; 
+
 var gameStatus = "game";
 
-//var rectBorders = [];
 var scribWalls = [];
-//var starCollectable = [];
-//var badStarCollectable = [];
-//var scribble; 
+var scribble; 
+
+const particles = [];
 
 //var bgMusicIntro;
 //var bgMusicLoop;
@@ -26,6 +27,7 @@ function preload(){
 
     idleAnimation = loadStrings("./images/cat/animation/idle.txt");
     walkAnimation = loadStrings("./images/cat/animation/walk.txt");
+    attackAnimation = loadStrings("./images/cat/animation/attack.txt");
 
     //soundFormats("mp3");
 
@@ -44,23 +46,26 @@ function setup(){
     catChar = new characterCreator(100, 100, 40, 60);
     catChar.loadAnimation("idle", idleAnimation);
     catChar.loadAnimation("walk", walkAnimation);
-    //currAnimationSelect = "idle";
-    
+    catChar.loadAnimation("attack", attackAnimation);
+
     //obstacle
-    for(i = 0; i < 3; i++){
-        obstacle = new rectMaker((Math.floor(Math.random() * 501) + 100),(Math.floor(Math.random() * 401) + 100), 100, 100, "static");
+    for(i = 0; i < 10; i++){
+        obstacle = new rectMaker((Math.floor(Math.random() * 501) + 100),(Math.floor(Math.random() * 301) + 200), 50, 50, "static");
+        obstacle.setHealth(100);
         obstacles.push(obstacle);
     }
 
+    
     //points 
     push();
     for(i = 0; i < 20; i++){
-        currPt = new rectMaker((Math.floor(Math.random() * 551) + 100),(Math.floor(Math.random() * 451) + 100), 7, 7, "static")
+        currPt = new rectMaker((Math.floor(Math.random() * 551) + 100),(Math.floor(Math.random() * 351) + 200), 7, 7, "static")
         currPt.changeColor("green");
         addPt.push(currPt);
     }
     pop();
 
+    /*
     push();
     for(i = 0; i < 10; i++){
         currPt = new rectMaker((Math.floor(Math.random() * 551) + 100),(Math.floor(Math.random() * 451) + 100), 7, 7, "static")
@@ -68,6 +73,7 @@ function setup(){
         subPt.push(currPt);
     }
     pop();
+    */
 
     //scribble 
     scribble = new Scribble();
@@ -97,30 +103,9 @@ function draw()
     push();
     fill(0, 0, 0);
     textSize(20);
-    text(`Health: ${health}`, 650, 70);
-    text(`Score: ${score}`, 650, 90);
+    text(`Obstacles remaining: ${obsRemain}`, 515, 70);
+    text(`Collectable: ${collectable}`, 515, 90);
     pop();
-
-    //obstacles
-    //testRect.draw();
-
-    //collision
-    /*
-    catChar.collisionCheck(testRect)
-    if(catChar.isColliding()){
-        charColli = true;
-    }
-    else{
-        charColli = false;
-    }
-    */
-   //game over
-    if(gameStatus == "lose"){
-        push();
-        textSize(60);
-        text("You lose...", width/3, height/2);
-        pop();
-    }
 
     if(gameStatus == "win"){
         push();
@@ -152,54 +137,51 @@ function draw()
                 catChar.updatePosition("down");
             }
         }
+        else if(kb.pressing("j")){
+            catChar.drawAnimation("attack");
+            for(let i = 0; i < obstacles.length; i++){
+                if(dist(catChar.getAnimation().position.x, catChar.getAnimation().position.y, obstacles[i].getShape().position.x, obstacles[i].getShape().position.y) < 58){
+                    createParticles(obstacles[i].getShape().position.x, obstacles[i].getShape().position.y);
+                    obstacles[i].subHealth(1);
+                    if(obstacles[i].getHealth() <= 0){
+                        //reduce obsRemain
+                        obsRemain -= 1;
+                        //remove
+                        obstacles[i].getShape().remove();
+                        obstacles.splice(i,1);
+                    }
+                    break;
+                }
+            }
+        }
         else{
             catChar.drawAnimation("idle");
         }
 
+        showParticles();
+
+        
         //collect pts
         for(i=0; i<addPt.length; i++){
             if(catChar.collisionCheck(addPt[i].getShape())){
-                score += 1;
+                collectable += 1;
                 addPt[i].getShape().remove();
                 addPt.splice(i, 1);
                 break;
             }
-        }
+        }        
 
-        //reduce health
-        for(i=0; i<subPt.length; i++){
-            if(catChar.collisionCheck(subPt[i].getShape())){
-                health -= 1;
-                subPt[i].getShape().remove();
-                subPt.splice(i, 1);
-                break;
-            }
-        }
-
-        if(health == 0){
-            gameStatus = "lose";
-            catChar.drawAnimation("idle");
-        }
-        if(score == 10){
+        if(collectable >= 10 && obsRemain == 0){
             gameStatus = "win";
             catChar.drawAnimation("idle");
         }
 
+        
         if(gameStatus != "game"){
             addLen = addPt.length;
-            for(i=0; i<addLen; i++){
+            for(let i=0; i<addLen; i++){
                 poppedShape = addPt.pop();
                 poppedShape.getShape().remove();
-            }
-            subLen = subPt.length;
-            for(i=0; i<subLen; i++){
-                poppedShape = subPt.pop();
-                poppedShape.getShape().remove();
-            }
-            obsLen = obstacles.length;
-            for(i=0; i<obsLen; i++){
-                poppedObs = obstacles.pop();
-                poppedObs.getShape().remove();
             }
         }
     }
@@ -219,6 +201,27 @@ function draw()
     //text("Width: " + width, -350, -210);
     //text("Height: " + height, -350, -190);
 
+}
+
+function createParticles(x,y){
+    //particles
+    for(let i = 0; i < 5; i++){
+        let p = new Particle(x,y);
+        particles.push(p);
+    }
+    showParticles();
+}
+
+function showParticles(){
+    push();
+    for(let i = particles.length - 1; i >= 0; i--){
+        particles[i].update();
+        particles[i].show();
+        if (particles[i].finished()){
+            particles.splice(i, 1);
+        }
+    }
+    pop();
 }
 
 function nameMaker(){

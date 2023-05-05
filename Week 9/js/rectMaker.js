@@ -1,13 +1,14 @@
 class rectMaker
 {
   
-  constructor(x,y,w,h, condition)
+  constructor(x,y,w,h,condition)
   {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
     this.condition = condition;
+    this.health;
     this.shape;
     this.createShape();
   }
@@ -22,6 +23,18 @@ class rectMaker
 
   visibility(){
     this.shape.visible = false;
+  }
+
+  setHealth(health){
+    this.health = health;
+  }
+
+  subHealth(sub){
+    this.health -= sub;
+  }
+
+  getHealth(){
+    return this.health;
   }
 
   updateShape(){
