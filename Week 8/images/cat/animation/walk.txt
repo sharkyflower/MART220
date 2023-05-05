@@ -7,4 +7,4 @@
 ./images/cat/Walk (7).png
 ./images/cat/Walk (8).png
 ./images/cat/Walk (9).png
-./images/cat/Walk (10).png 
+./images/cat/Walk (10).png

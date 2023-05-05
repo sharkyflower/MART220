@@ -1,16 +1,14 @@
 class scribbleRectMaker
 {
   
-    constructor(x,y,w,h,colliDetection = false, name)
+    constructor(x,y,w,h)
     {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
-        this.colliDetection = colliDetection;
-        this.isColliding = false;
-        this.name = name;
-        this.collisionBox = new rectMaker(this.x-(this.w/2), this.y-(this.h/2), this.w, this.h, true, this.name);
+        this.collisionBox = new rectMaker(this.x, this.y, this.w, this.h, "static");
+        this.collisionBox.visibility();
     }
   
     getX()
@@ -30,14 +28,6 @@ class scribbleRectMaker
         return this.collisionBox.getH();
     }
 
-    getName(){
-        return this.collisionBox.getName();
-    }
-
-    getColliDetection(){
-        return this.colliDetection();
-    }
-
     getCollisionBox(){
         return this.collisionBox;
     }
@@ -45,21 +35,6 @@ class scribbleRectMaker
     draw()
     {
         scribble.scribbleRect(this.x, this.y, this.w, this.h)
-        this.collisionBox.draw()
     }
-
-    rectCollisionCheck(inChar){
-        this.isColliding = collideRectRect(this.getX(), this.getY(), this.getW(), this.getH(), 
-            inChar.getX(), inChar.getY(), inChar.getW(), inChar.getH());
-    }
-
-    getCollision(){
-        return this.isColliding;
-    } 
-
-    directionalCollisionCheck(inChar, existingColli){
-        return this.collisionBox.directionalCollisionCheck(inChar, existingColli);
-    }
-    
 
 }

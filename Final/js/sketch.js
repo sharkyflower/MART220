@@ -33,9 +33,17 @@ function setup(){
     //scribble 
     scribble = new Scribble();
 
+    //borders
+    borders = new borders();
+
     //player 
-    player = new player(400,700,50,50,5);
-    enemy = new enemy(400,0,400,200,100);
+    player = new player(300,700,50,50,5);
+
+    //enemy
+    enemy = new enemy(300,150,100,100,100);
+
+    
+
 
     /*
     //scribbleWalls
@@ -82,7 +90,13 @@ function draw()
     background(0);
 
     //name maker
-    nameMaker();
+    //nameMaker();
+
+    //borders
+    push();
+    borders.draw();
+    pop();
+    
 
     //player
     push();
@@ -205,7 +219,7 @@ function draw()
     //text("Height: " + height, -350, -190);
 
 }
-
+/*
 function nameMaker(){
     //name maker
     push();
@@ -216,6 +230,7 @@ function nameMaker(){
     text("I can't think of a good name so this ends up being the name", 10, 25);
     pop();
 }
+/*
 
 /*
 

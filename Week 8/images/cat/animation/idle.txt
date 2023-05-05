@@ -7,4 +7,4 @@
 ./images/cat/Idle (7).png
 ./images/cat/Idle (8).png
 ./images/cat/Idle (9).png
-./images/cat/Idle (10).png 
+./images/cat/Idle (10).png

@@ -71,9 +71,14 @@ class enemy{
 
     healthDisplay(){
         push();
-        rect(75, 750, 650, 25);
-        fill(255,0,0);
-        rect(80, 755, 640, 15);
+        noFill();
+        stroke(255,0,0,127);
+        strokeWeight(5);
+        //top-left => top-right => bot-right => bot-left
+        //total width: 435
+        rect(80,30,50,1,30,0,0,30);
+        stroke(255,255,255,127);
+        rect(135,30,385,1,0,30,30,0);
         pop();
     }
 

@@ -1,7 +1,15 @@
 var catChar;
+var charColli;
+var playerCondition;
+var health = 3;
+var score = 0;
+var addPt = [];
+var subPt = [];
+var obstacles = []; 
+var gameStatus = "game";
 
 //var rectBorders = [];
-//var scribWalls = [];
+var scribWalls = [];
 //var starCollectable = [];
 //var badStarCollectable = [];
 //var scribble; 
@@ -33,47 +41,44 @@ function setup(){
     angleMode(DEGREES);
 
     //animation stuff
-    catChar = new characterCreator(10, 10, 50, 50);
+    catChar = new characterCreator(100, 100, 40, 60);
     catChar.loadAnimation("idle", idleAnimation);
     catChar.loadAnimation("walk", walkAnimation);
     //currAnimationSelect = "idle";
+    
+    //obstacle
+    for(i = 0; i < 3; i++){
+        obstacle = new rectMaker((Math.floor(Math.random() * 501) + 100),(Math.floor(Math.random() * 401) + 100), 100, 100, "static");
+        obstacles.push(obstacle);
+    }
 
-    /*
+    //points 
+    push();
+    for(i = 0; i < 20; i++){
+        currPt = new rectMaker((Math.floor(Math.random() * 551) + 100),(Math.floor(Math.random() * 451) + 100), 7, 7, "static")
+        currPt.changeColor("green");
+        addPt.push(currPt);
+    }
+    pop();
+
+    push();
+    for(i = 0; i < 10; i++){
+        currPt = new rectMaker((Math.floor(Math.random() * 551) + 100),(Math.floor(Math.random() * 451) + 100), 7, 7, "static")
+        currPt.changeColor("red");
+        subPt.push(currPt);
+    }
+    pop();
+
     //scribble 
     scribble = new Scribble();
 
     //scribbleWalls
-    scribWall = new scribbleRectMaker(125, 300, 50, 425, true, "scribWall");
-    scribWall2 = new scribbleRectMaker(675, 300, 50, 425, true, "scribWall2");
-    scribWall3 = new scribbleRectMaker(400, 113, 500, 50, true, "scribWall3");
-    scribWall4 = new scribbleRectMaker(400, 489, 500, 50, true, "scribWall4");
+    scribWall = new scribbleRectMaker(30, 300, 50, 600);
+    scribWall2 = new scribbleRectMaker(770, 300, 50, 600);
+    scribWall3 = new scribbleRectMaker(400, 25, 687, 50);
+    scribWall4 = new scribbleRectMaker(400, 575, 687, 50);
 
     scribWalls.push(scribWall, scribWall2, scribWall3, scribWall4);
-
-    //scribble collectables 
-    scribStar = new scribbleStarMaker(450, 100, 20, 20, false, "scribStar");
-    scribStar2 = new scribbleStarMaker(500, 200, 20, 20, false, "scribStar2");
-    scribStar3 = new scribbleStarMaker(550, 300, 20, 20, false, "scribStar3");
-    scribStar4 = new scribbleStarMaker(600, 400, 20, 20, false, "scribStar4");
-    scribStar5 = new scribbleStarMaker(450, 450, 20, 20, false, "scribStar5");
-
-    starCollectable.push(scribStar, scribStar2, scribStar3, scribStar4, scribStar5)
-
-    //scribble bad collectables
-    badScribStar = new scribbleStarMaker(600, 100, 20, 20, false, "badScribStar");
-    badScribStar2 = new scribbleStarMaker(630, 250, 20, 20, false, "badScribStar2");
-
-    badStarCollectable.push(badScribStar, badScribStar2);
-
-    //borderMaker 
-    topBorderRect = new rectMaker(0,0,width,5,true, "topBorderRect");
-    botBorderRect = new rectMaker(0,height,width,-5,true, "botBorderRect");
-    leftBorderRect = new rectMaker(0,0,5,height,true, "leftBorderRect");
-    rightBorderRect = new rectMaker(width,0,-5,height,true, "rightBorderRect");
-
-    rectBorders.push(topBorderRect, botBorderRect, leftBorderRect, rightBorderRect);
-
-    */
 
     //font picker
     textFont(fontForAll);
@@ -83,112 +88,129 @@ function setup(){
 
 function draw()
 {
+    clear();
     background(255,255,255);
-
     //name maker
     nameMaker();
 
-    //movement
-    if(kb.pressing("d")){
-        catChar.updatePosition("Forward");
-        catChar.drawAnimation("Walk");
-    }
-    else if(kb.pressing("a")){
-        catChar.updatePosition("Reverse");
-        catChar.drawAnimation("Walk");
-    }
+    //status
+    push();
+    fill(0, 0, 0);
+    textSize(20);
+    text(`Health: ${health}`, 650, 70);
+    text(`Score: ${score}`, 650, 90);
+    pop();
 
-    //background test
+    //obstacles
+    //testRect.draw();
 
+    //collision
     /*
-    //edge borders
-    for(var i = 0; i < rectBorders.length; i++){
-        rectBorders[i].draw();
-        rectBorders[i].rectCollisionCheck(catChar);
-        text("is colliding? " + rectBorders[i].getCollision(), 100 + i*20, 100 + i*20);
+    catChar.collisionCheck(testRect)
+    if(catChar.isColliding()){
+        charColli = true;
+    }
+    else{
+        charColli = false;
+    }
+    */
+   //game over
+    if(gameStatus == "lose"){
+        push();
+        textSize(60);
+        text("You lose...", width/3, height/2);
+        pop();
     }
 
-    catChar.collideWithBorder(rectBorders)
+    if(gameStatus == "win"){
+        push();
+        textSize(60);
+        text("You win!", width/3, height/2);
+        pop();
+    }
 
-    /*
-    for(var i = 0; i < rectBorders.length; i++){
-        catChar.collideWithBorder(rectBorders[i].getCollision(), rectBorders[i]);
-        if(catChar.getCollisionBorder() == true){
-            break;
+    //ingame
+    if(gameStatus == "game"){
+        //movement
+        if(kb.pressing("d") || kb.pressing("a") || kb.pressing("s") || kb.pressing("w")){
+            if(kb.pressing("d")){
+                catChar.updateDirection("forward");
+                catChar.drawAnimation("walk");
+                catChar.updatePosition("right");
+            }
+            if(kb.pressing("a")){
+                catChar.updateDirection("reverse");
+                catChar.drawAnimation("walk");
+                catChar.updatePosition("left");
+            }
+            if(kb.pressing("w")){
+                catChar.drawAnimation("walk");
+                catChar.updatePosition("up");
+            }
+            if(kb.pressing("s")){
+                catChar.drawAnimation("walk");
+                catChar.updatePosition("down");
+            }
+        }
+        else{
+            catChar.drawAnimation("idle");
+        }
+
+        //collect pts
+        for(i=0; i<addPt.length; i++){
+            if(catChar.collisionCheck(addPt[i].getShape())){
+                score += 1;
+                addPt[i].getShape().remove();
+                addPt.splice(i, 1);
+                break;
+            }
+        }
+
+        //reduce health
+        for(i=0; i<subPt.length; i++){
+            if(catChar.collisionCheck(subPt[i].getShape())){
+                health -= 1;
+                subPt[i].getShape().remove();
+                subPt.splice(i, 1);
+                break;
+            }
+        }
+
+        if(health == 0){
+            gameStatus = "lose";
+            catChar.drawAnimation("idle");
+        }
+        if(score == 10){
+            gameStatus = "win";
+            catChar.drawAnimation("idle");
+        }
+
+        if(gameStatus != "game"){
+            addLen = addPt.length;
+            for(i=0; i<addLen; i++){
+                poppedShape = addPt.pop();
+                poppedShape.getShape().remove();
+            }
+            subLen = subPt.length;
+            for(i=0; i<subLen; i++){
+                poppedShape = subPt.pop();
+                poppedShape.getShape().remove();
+            }
+            obsLen = obstacles.length;
+            for(i=0; i<obsLen; i++){
+                poppedObs = obstacles.pop();
+                poppedObs.getShape().remove();
+            }
         }
     }
-    */
-
-    /*
+    
     //walls 
     push();
-
-    //scribRect.draw();
-    //scribRect.rectCollisionCheck(catChar);
-    //catChar.collideWithScribWall(scribRect);
+    stroke(255,0,0, 127);
     for(var i = 0; i<scribWalls.length; i++){
         scribWalls[i].draw();
-        scribWalls[i].rectCollisionCheck(catChar);
-        text(scribWalls[i].getName() + " is colliding? " + scribWalls[i].getCollision(), 200, 200 + i*20)
     }
-    
-    catChar.collideWithScribWall(scribWalls)
-
     pop();
-
-    //star collectables 
-    push();
-    
-    stroke(255,205,60);
-
-    for(var i = 0; i < starCollectable.length; i++){
-        starCollectable[i].draw();
-        starCollectable[i].rectCollisionCheck(catChar);
-    }
-
-    pop();
-
-    for(var i = 0; i < starCollectable.length; i++){
-        text(starCollectable[i].getName() + " is colliding? " + starCollectable[i].getCollision(), 350, 350 + i*20);
-    }
-
-    //bad star collectables
-    push();
-
-    stroke(219,26,26,125);
-
-    for(var i = 0; i < badStarCollectable.length; i++){
-        badStarCollectable[i].draw();
-        badStarCollectable[i].rectCollisionCheck(catChar);
-    }
-
-    pop();
-
-    for(var i = 0; i < badStarCollectable.length; i++){
-        text(badStarCollectable[i].getName() + " is colliding? " + badStarCollectable[i].getCollision(), 350, 500 + i*20);
-    }
-
-    //text(scribStar.getName() + " is colliding? " + scribStar.getCollision(), 350, 350);
-
-    //update collision checks
-    catChar.collisionRefresher();
-
-    text("char collision check: " + catChar.getCollisionMap(), 100, 400);
-
-    text("restrict movement activation check: " + catChar.getRestrictMvtActivation(), 300, 450);
-
-    text("directional collision check: " + catChar.getDirectionalCollision(), 50, 500);
-
-    text("shape collided: " + catChar.getShapeCollided(), 200, 200);
-
-
-    //score keeping
-    catChar.itemCollection(starCollectable, "+", starCollectSound);
-    catChar.itemCollection(badStarCollectable, "-", badStarCollectSound);
-
-    text("Stars collected: " + catChar.getItemCollected(), 200, 250);
-
-    */
 
     //check location of mouse (x,y)
     //fill(0,0,0);
@@ -202,57 +224,8 @@ function draw()
 function nameMaker(){
     //name maker
     fill("#DC143C");
-    text("Lucy H", width-62, height-10);
+    text("Lucy H", width-120, height-15);
 
     fill(0,0,0);
-    text("I can't think of a good name so this ends up being the name", 10, 25);
+    text("I can't think of a good name so this ends up being the name", 65, 33);
 }
-
-/*
-
-function keyPressed(){
-    if (key == 'w') {
-        catChar.isMoving("w");
-    }
-    if (key == 'a') {
-        catChar.isMoving("a");
-    }
-    if (key == 's') {
-        catChar.isMoving("s");
-    }
-    if (key == 'd') {
-        catChar.isMoving("d");
-    }
-
-    /*
-    //music intro plays
-    if(bgMusicIntro.isLoaded() && !bgMusicIntro.isPlaying() && bgPlayMode == "Intro"){
-        bgMusicIntro.play();
-        bgPlayMode = "Loop";
-    }
-    else if(!bgMusicIntro.isPlaying() && bgPlayMode == "Loop"){
-        bgMusicLoop.loop();
-        bgPlayMode = "inLoop";
-    }    
-    */
-    /*
-}
-
-
-function keyReleased() {
-    if (key == 'w') {
-        catChar.isNotMoving("w");
-    }
-    if (key == 'a') {
-        catChar.isNotMoving("a");
-    }
-    if (key == 's') {
-        catChar.isNotMoving("s");
-    }
-    if (key == 'd') {
-        catChar.isNotMoving("d");
-    }
-    
-  }
-*/
-
