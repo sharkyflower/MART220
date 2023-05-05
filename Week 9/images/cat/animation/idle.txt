@@ -1,0 +1,10 @@
+./images/cat/Idle (1).png
+./images/cat/Idle (2).png
+./images/cat/Idle (3).png
+./images/cat/Idle (4).png
+./images/cat/Idle (5).png
+./images/cat/Idle (6).png
+./images/cat/Idle (7).png
+./images/cat/Idle (8).png
+./images/cat/Idle (9).png
+./images/cat/Idle (10).png
