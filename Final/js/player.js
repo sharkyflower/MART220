@@ -6,7 +6,7 @@ class player
         this.w = w;
         this.h = h;
         this.vel = vel;
-        this.hitbox = new rectMaker(this.x-(this.w/2), this.y-(this.h/2), this.w, this.h);
+        this.hitbox = new hitbox(this.x-(this.w/2), this.y-(this.h/2), this.w, this.h, "d");
     }
 
     getX()
@@ -32,22 +32,18 @@ class player
 
     changeX(input){
         this.x += input
-        this.hitbox.changeX(input);
     }
 
     changeY(input){
         this.y += input;
-        this.hitbox.changeY(input);
     }
 
     changeW(input){
         this.w += input;
-        this.hitbox.changeW(input);
     }
 
     changeH(input){
         this.h += input;
-        this.hitbox.changeH(input);
     }
 
     changeAll(inX, inY, inW, inH){
@@ -66,8 +62,6 @@ class player
             scribble.scribbleRect(this.x, this.y, this.w-i, this.h-i);
         }
         stroke(255,255,255,0);
-        //scribble.scribbleRect(this.x, this.y, this.w-10, this.h-10);
-        this.hitbox.draw();
         pop();
 
         this.movement();
@@ -76,16 +70,24 @@ class player
 
     movement(){
         if(kb.pressing("right")){
+            this.hitbox.getShape.vel.x = 5;
             this.changeX(this.vel);
         }
         if(kb.pressing("left")){
+            this.hitbox.getShape.vel.x = -5;
             this.changeX(-this.vel);
         }
         if(kb.pressing("up")){
+            this.hitbox.getShape.vel.y = -5;
             this.changeY(-this.vel);
         }
         if(kb.pressing("down")){
+            this.hitbox.getShape.vel.y = 5;
             this.changeY(this.vel);
+        }
+        if(!kb.pressing("right") && !kb.pressing("left") && !kb.pressing("up") && !kb.pressing("down")){
+            this.hitbox.getShape.vel.x = 0;
+            this.hitbox.getShape.vel.y = 0;
         }
     }
 }
