@@ -5,7 +5,7 @@ class enemy{
         this.w = w;
         this.h = h;
         this.health = health;
-        this.hitbox = new rectMaker(this.x-(this.w/2), this.y-(this.h/2), this.w, this.h);
+        this.hitbox = new hitboxAddon(this.x, this.y, this.w, this.h, "k");
     }
 
     getX()
@@ -63,7 +63,7 @@ class enemy{
         stroke(127,127,255,255);
         scribble.scribbleRect(this.x, this.y, this.w-40, this.h-40);
         stroke(255,255,255,0);
-        this.hitbox.draw();
+
         pop();
         
         this.healthDisplay();

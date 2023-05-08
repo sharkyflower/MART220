@@ -94,7 +94,7 @@ function draw()
 
     //borders
     push();
-    borders.draw();
+    //borders.draw();
     pop();
     
 
@@ -107,7 +107,7 @@ function draw()
     push();
     enemy.draw();
     pop();  
-
+    
     //movement
     /*
     if(kb.pressing("d")){

@@ -6,7 +6,11 @@ class player
         this.w = w;
         this.h = h;
         this.vel = vel;
-        this.hitbox = new hitbox(this.x-(this.w/2), this.y-(this.h/2), this.w, this.h, "d");
+        this.focusAlpha = 0;
+        this.focusDiameter = 0;
+        this.focusVisual;
+        this.hitbox = new hitboxAddon(this.x, this.y, this.w, this.h, "d");
+        this.hitbox.circlify(20);
     }
 
     getX()
@@ -30,12 +34,12 @@ class player
         this.vel = input;
     }
 
-    changeX(input){
-        this.x += input
+    changeX(){
+        this.x = this.hitbox.getX();
     }
 
-    changeY(input){
-        this.y += input;
+    changeY(){
+        this.y = this.hitbox.getY();
     }
 
     changeW(input){
@@ -61,33 +65,100 @@ class player
             stroke(255,255,255,255-(i*5));
             scribble.scribbleRect(this.x, this.y, this.w-i, this.h-i);
         }
-        stroke(255,255,255,0);
         pop();
 
+        push();
+        fill(255,255,255);
+
+        text("player's x: " + this.x, 250, 400);
+        text("player's y: " + this.y, 250, 420);
+        text("hitbox's x: " + this.hitbox.getX(), 250, 440);
+        text("hitbox's y: " + this.hitbox.getY(), 250, 460);
+        pop();
+
+        this.focus();
         this.movement();
         
     }
 
+    focus(){
+        if(kb.presses("shift")){
+            console.log("Shift is pressed");
+            this.hitbox.visibility();
+            this.vel = 3;
+        }
+        if(kb.pressing("shift")){
+            push();
+            strokeWeight(3);
+            fill(255,100,75,this.focusAlpha);
+            stroke(127,25,25,this.focusAlpha);
+
+            this.focusVisual = circle(this.x,this.y,this.focusDiameter);
+            if(this.focusAlpha <= 255){
+                this.focusAlpha += 50;
+                if(this.focusAlpha > 255){
+                    this.focusAlpha = 255;
+                }
+            }
+            if(this.focusDiameter <= 15){
+                this.focusDiameter += 7.5;
+                if(this.focusDiameter > 15){
+                    this.focusDiameter = 15;
+                }
+            }
+            pop();
+        }
+
+        if(kb.released("shift")){
+            this.hitbox.visibility();
+            this.vel = 5;
+            this.focusVisual;
+            this.focusAlpha = 0;
+            this.focusDiameter = 0;
+        }
+
+        console.log(this.vel);
+    }
+
     movement(){
-        if(kb.pressing("right")){
-            this.hitbox.getShape.vel.x = 5;
-            this.changeX(this.vel);
+        if(kb.pressing("right")){ // move right
+            this.hitbox.changeX(this.vel);
+            this.changeX();
         }
-        if(kb.pressing("left")){
-            this.hitbox.getShape.vel.x = -5;
-            this.changeX(-this.vel);
+        if(kb.pressing("left")){ // move left
+            this.hitbox.changeX(-this.vel);
+            this.changeX();
         }
-        if(kb.pressing("up")){
-            this.hitbox.getShape.vel.y = -5;
-            this.changeY(-this.vel);
+        if((kb.pressing("right") && kb.pressing("left")) || (!kb.pressing("right") && !kb.pressing("left"))){
+            // in the event that player pressing both a and d
+            // and in the event that player pressing w and d then let go of d [drifting]
+            // set vel of x to 0
+            this.hitbox.changeX(0);
+            this.changeX();
         }
-        if(kb.pressing("down")){
-            this.hitbox.getShape.vel.y = 5;
-            this.changeY(this.vel);
+        if(kb.pressing("up")){ // move up
+            this.hitbox.changeY(-this.vel);
+            this.changeY();
+        }
+        if(kb.pressing("down")){ // move down
+            this.hitbox.changeY(this.vel);
+            this.changeY();
+        }
+        if((kb.pressing("up") && kb.pressing("down")) || (!kb.pressing("up") && !kb.pressing("down"))){
+            // in the event that player pressing both w and s
+            // and in the event that player pressing w and d then let go of w [drifting]
+            // set vel of y to 0
+            this.hitbox.changeY(0);
+            this.changeY();
         }
         if(!kb.pressing("right") && !kb.pressing("left") && !kb.pressing("up") && !kb.pressing("down")){
-            this.hitbox.getShape.vel.x = 0;
-            this.hitbox.getShape.vel.y = 0;
+            // if not pressing any movement key
+            // stop moving
+            this.hitbox.changeX(0);
+            this.hitbox.changeY(0);
+            this.changeX();
+            this.changeY();
         }
     }
+
 }
