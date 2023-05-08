@@ -112,8 +112,8 @@ class player
         if(kb.released("shift")){
             this.vel = 5;
             this.focusVisual;
-            this.focusAlpha = 0;
-            this.focusDiameter = 0;
+            //this.focusAlpha = 0;
+            //this.focusDiameter = 0;
         }
 
         if(!kb.pressing("shift") && (this.focusAlpha != 0 || this.focusDiameter != 0)){
@@ -130,7 +130,7 @@ class player
                 }
             }
             if(this.focusDiameter > 0){
-                this.focusDiameter += 7.5;
+                this.focusDiameter -= 7.5;
                 if(this.focusDiameter <= 0){
                     this.focusDiameter = 0;
                 }
