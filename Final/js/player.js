@@ -11,6 +11,7 @@ class player
         this.focusVisual;
         this.hitbox = new hitboxAddon(this.x, this.y, this.w, this.h, "d");
         this.hitbox.circlify(20);
+        this.hitbox.visibility();
     }
 
     getX()
@@ -84,7 +85,6 @@ class player
     focus(){
         if(kb.presses("shift")){
             console.log("Shift is pressed");
-            this.hitbox.visibility();
             this.vel = 3;
         }
         if(kb.pressing("shift")){
@@ -110,14 +110,33 @@ class player
         }
 
         if(kb.released("shift")){
-            this.hitbox.visibility();
             this.vel = 5;
             this.focusVisual;
             this.focusAlpha = 0;
             this.focusDiameter = 0;
         }
 
-        console.log(this.vel);
+        if(!kb.pressing("shift") && (this.focusAlpha != 0 || this.focusDiameter != 0)){
+            push();
+            strokeWeight(3);
+            fill(255,100,75,this.focusAlpha);
+            stroke(127,25,25,this.focusAlpha);
+
+            this.focusVisual = circle(this.x,this.y,this.focusDiameter);
+            if(this.focusAlpha > 0){
+                this.focusAlpha -= 50;
+                if(this.focusAlpha <= 0){
+                    this.focusAlpha = 0;
+                }
+            }
+            if(this.focusDiameter > 0){
+                this.focusDiameter += 7.5;
+                if(this.focusDiameter <= 0){
+                    this.focusDiameter = 0;
+                }
+            }
+            pop();
+        }
     }
 
     movement(){
