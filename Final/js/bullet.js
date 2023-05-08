@@ -1,22 +1,59 @@
-class hitboxAddon{
-    constructor(x,y,w,h,condition){
+class bullet{
+
+    //TODO: make a new class [bullet]
+    //change this class to [playerShotType]
+    //updates
+    
+    constructor(x,y,condition,type){
         this.x = x;
         this.y = y;
-        this.w = w;
-        this.h = h;
+        this.vx;
+        this.vy;
+        this.w;
+        this.h;
         this.condition = condition;
+        this.type = type;
+        this.clearCheck = false;
+
+        this.alpha;
+        this.color;
+
         this.shape;
-        this.createShape();
+
+        this.typeSelection();
         //this.visibility();
     }
 
-    createShape(){
+    typeSelection(){
+        if(this.type == "playerUnfocused"){
+            this.playerUnfocused();
+        }
+    }
+
+    playerUnfocused(){
+        this.w = 10
+        this.h = 30
+        this.vx = 2;
+        this.vy = -20;
         this.shape = createSprite(this.x, this.y, this.w, this.h, this.condition);
         this.shape.rotationLock = true;
+        this.changeColor("#F5A9B8");
+        this.changeRotation(45);
+        this.changeDirection(90);
+        this.overlapSwitch();
     }
 
     changeColor(inColor){
         this.shape.color = inColor;
+        this.shape.stroke = inColor;
+    }
+
+    changeRotation(inRot){
+        this.shape.rotation = inRot;
+    }
+
+    changeDirection(inDir){
+        this.shape.direction = inDir;
     }
 
     visibility(){
@@ -91,5 +128,23 @@ class hitboxAddon{
 
     isOverlapping(inObj){
         return this.shape.overlaps(inObj);
+    }
+
+    overlapSwitch(){
+        this.shape.overlaps(player.hitbox.getShape());
+        this.shape.overlaps(borders.returnBarriers());
+    }
+
+    update(){
+        this.changeX(this.vx);
+        this.changeY(this.vy);
+    }
+
+    checkRemoveCondition(){
+        if(this.y < 100){
+            this.clearCheck = true;
+        }
+
+        return this.clearCheck;
     }
 }

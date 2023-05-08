@@ -6,12 +6,17 @@ class player
         this.w = w;
         this.h = h;
         this.vel = vel;
+
         this.focusAlpha = 0;
         this.focusDiameter = 0;
         this.focusVisual;
+        this.focusType = false;
+
         this.hitbox = new hitboxAddon(this.x, this.y, this.w, this.h, "d");
         this.hitbox.circlify(20);
         this.hitbox.visibility();
+
+        this.bullets = [];
     }
 
     getX()
@@ -79,13 +84,14 @@ class player
 
         this.focus();
         this.movement();
+        this.shoot();
         
     }
 
     focus(){
         if(kb.presses("shift")){
-            console.log("Shift is pressed");
             this.vel = 3;
+            this.focusType = true;
         }
         if(kb.pressing("shift")){
             push();
@@ -112,6 +118,7 @@ class player
         if(kb.released("shift")){
             this.vel = 5;
             this.focusVisual;
+            this.focusType = false;
             //this.focusAlpha = 0;
             //this.focusDiameter = 0;
         }
@@ -177,6 +184,29 @@ class player
             this.hitbox.changeY(0);
             this.changeX();
             this.changeY();
+        }
+    }
+
+    shoot(){
+        if(kb.pressing("z")){
+            console.log("z is pressed");
+            if(this.focusType){
+                console.log("focus shot");
+            }
+            else{
+                console.log("normal shot");
+                var normalShot = new bullet(this.x, this.y-30, "k", "playerUnfocused");
+                this.bullets.push(normalShot);
+            }
+
+        }
+
+        for (let i=0; i < this.bullets.length; i++){
+            this.bullets[i].update();
+            if(this.bullets[i].checkRemoveCondition()){
+                this.bullets[i].getShape().remove();
+                this.bullets.splice(i, 1);
+            }
         }
     }
 
