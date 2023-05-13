@@ -17,6 +17,11 @@ class borders{
         this.rightBorder.color = 127;
         this.topBorder.color = 127;
         this.botBorder.color = 127;
+
+        this.leftBorder.layer = 10;
+        this.rightBorder.layer = 10;
+        this.topBorder.layer = 10;
+        this.botBorder.layer = 10;
     }
 
     returnBarriers(){

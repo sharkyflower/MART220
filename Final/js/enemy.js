@@ -1,11 +1,13 @@
 class enemy{
-    constructor(x, y, w, h, health){
+    constructor(x, y, w, h){
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
-        this.health = health;
-        this.hitbox = new hitboxAddon(this.x, this.y, this.w, this.h, "k");
+        this.whiteHealth = 385;
+        this.redHealth = 50;
+        this.hitbox = new hitboxAddon(this.x, this.y, this.w, this.h, "d");
+        this.hitbox.getShape().overlaps(player.hitbox.getShape());
     }
 
     getX()
@@ -23,6 +25,10 @@ class enemy{
     getH()
     {
         return this.hitbox.getH();
+    }
+
+    getHitbox(){
+        return this.hitbox;
     }
 
     changeX(input){
@@ -76,10 +82,14 @@ class enemy{
         strokeWeight(5);
         //top-left => top-right => bot-right => bot-left
         //total width: 435
-        rect(80,30,50,1,30,0,0,30);
+        rect(80,30,this.redHealth,1,30,0,0,30);
         stroke(255,255,255,127);
-        rect(135,30,385,1,0,30,30,0);
+        rect(135,30,this.whiteHealth,1,0,30,30,0);
         pop();
+    }
+
+    isOverlapping(inObj){
+        return this.hitbox.isOverlapping(inObj);
     }
 
 }

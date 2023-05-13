@@ -195,16 +195,17 @@ class player
             }
             else{
                 console.log("normal shot");
-                var normalShot = new bullet(this.x, this.y-30, "k", "playerUnfocused");
-                this.bullets.push(normalShot);
+                if(frameCount % 3 == 0){
+                    var normalShot = new playerShotType(this.x, this.y-30, "playerUnfocused");
+                    this.bullets.push(normalShot);
+                }
             }
 
         }
 
-        for (let i=0; i < this.bullets.length; i++){
+        for (let i=this.bullets.length-1; i >= 0; i--){
             this.bullets[i].update();
             if(this.bullets[i].checkRemoveCondition()){
-                this.bullets[i].getShape().remove();
                 this.bullets.splice(i, 1);
             }
         }

@@ -40,7 +40,7 @@ function setup(){
     player = new player(300,700,50,50,5);
 
     //enemy
-    enemy = new enemy(300,150,100,100,100);
+    enemy = new enemy(300,150,100,100);
 
     
 

@@ -1,18 +1,17 @@
 class bullet{
-
-    //TODO: make a new class [bullet]
+        //TODO: make a new class [bullet]
     //change this class to [playerShotType]
     //updates
     
-    constructor(x,y,condition,type){
+    constructor(x,y,vx,vy,w,h,condition,user){
         this.x = x;
         this.y = y;
-        this.vx;
-        this.vy;
-        this.w;
-        this.h;
+        this.vx = vx;
+        this.vy = vy;
+        this.w = w;
+        this.h = h;
         this.condition = condition;
-        this.type = type;
+        this.user = user;
         this.clearCheck = false;
 
         this.alpha;
@@ -20,27 +19,13 @@ class bullet{
 
         this.shape;
 
-        this.typeSelection();
+        this.initialize();
         //this.visibility();
     }
 
-    typeSelection(){
-        if(this.type == "playerUnfocused"){
-            this.playerUnfocused();
-        }
-    }
-
-    playerUnfocused(){
-        this.w = 10
-        this.h = 30
-        this.vx = 2;
-        this.vy = -20;
+    initialize(){
         this.shape = createSprite(this.x, this.y, this.w, this.h, this.condition);
         this.shape.rotationLock = true;
-        this.changeColor("#F5A9B8");
-        this.changeRotation(45);
-        this.changeDirection(90);
-        this.overlapSwitch();
     }
 
     changeColor(inColor){
@@ -63,12 +48,6 @@ class bullet{
         else{
             this.shape.visible = true;
         }
-    }
-
-    resetShape(){
-        this.shape.remove();
-        this.shape = createSprite(this.x, this.y, this.w, this.h, this.condition);
-        this.shape.rotationLock = true;
     }
 
     circlify(input){
@@ -96,13 +75,13 @@ class bullet{
         return this.h;
     }
 
-    changeX(input){
-        this.shape.vel.x = input;
+    changeX(){
+        this.shape.vel.x = this.vx;
         this.x = this.shape.x;
     }
 
-    changeY(input){
-        this.shape.vel.y = input;
+    changeY(){
+        this.shape.vel.y = this.vy;
         this.y = this.shape.y;
     }
 
@@ -132,7 +111,9 @@ class bullet{
 
     overlapSwitch(){
         this.shape.overlaps(player.hitbox.getShape());
+        this.shape.overlaps(enemy.hitbox.getShape());
         this.shape.overlaps(borders.returnBarriers());
+        this.shape.layer=1;
     }
 
     update(){
@@ -141,10 +122,15 @@ class bullet{
     }
 
     checkRemoveCondition(){
-        if(this.y < 100){
-            this.clearCheck = true;
-        }
+        if(this.user == "player"){
+            if(this.y < 10 || this.x < 10 || this.x > 595){
+                this.clearCheck = true;
+            }
+            else if(enemy.isOverlapping(this.shape)){
+                this.clearCheck = true;
+            }
 
+        }
         return this.clearCheck;
     }
 }
